@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
@@ -16,11 +15,7 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
     """A serializer for creating new users. Includes all the required
        fields and validations, plus a repeated password. """
 
-    password = serializers.CharField(max_length=255, write_only=True, validators=[not_contains_whitespace,
-                                                                                  contains_uppercase,
-                                                                                  contains_digits,
-                                                                                  contains_lowercase,
-                                                                                  MinLengthValidator(8)])
+    password = serializers.CharField(max_length=255, write_only=True)
     confirm_password = serializers.CharField(max_length=255, write_only=True)
     email = serializers.EmailField()
     first_name = serializers.CharField(max_length=56, validators=[not_contains_symbols])

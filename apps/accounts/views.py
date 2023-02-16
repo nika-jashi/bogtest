@@ -1,17 +1,12 @@
-from django.core.cache import cache
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_spectacular.utils import extend_schema
 
 from apps.accounts.models import CustomAccount
 from apps.accounts.serializers import AccountRegistrationSerializer
-from apps.utils.email_sender import SendEmail
-from apps.utils.otp_generator import OTP_generator
 
 
 @extend_schema(tags=["Auth"])
@@ -31,11 +26,6 @@ class AccountRegistrationView(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
-        otp = OTP_generator()
-        cache.set(otp, email)
-        SendEmail.send_email(subject="OTP for Activation",
-                             body="Your Activation Code Is: " + otp,
-                             to=[email])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
